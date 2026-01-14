@@ -1,0 +1,5 @@
+docker compose up -d  -- start container
+docker compose down   -- stop container
+http://localhost:5678 -- open on browser.
+docker volume ls      -- To confirm data persistence
+
