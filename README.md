@@ -1,77 +1,108 @@
-🚀 AI Lead Intake & Classification Automation (n8n + LLM)
+# AI Lead Intake & Classification Automation (n8n + LLM)
 
-End-to-end AI-powered lead intake system that classifies incoming leads by intent, urgency, and category, routes them automatically, and stores structured data for CRM-style tracking.
+An end-to-end AI-powered automation built using **n8n** that ingests inbound leads, classifies them using a Large Language Model (LLM), and routes them automatically based on intent, urgency, and lead quality.
 
-🔹 Features
+This project demonstrates how LLMs can be safely integrated into production-grade automation workflows using deterministic outputs, validation logic, and fallback paths.
 
-Webhook API for real-time lead ingestion
+---
 
-LLM-based intent detection, urgency classification & lead scoring
+## Business Use Case
 
-Deterministic JSON outputs for production safety
+Service-based businesses and agencies often receive leads through multiple channels (forms, landing pages, ads).  
+Manual lead review is slow, inconsistent, and leads to delayed responses and missed opportunities.
 
-Automated routing into Sales / Support pipelines
+### Problem
+- Leads are manually reviewed and prioritized
+- Inconsistent qualification logic
+- High response-time latency
+- Risk of missing high-intent leads
 
-Google Sheets persistence for CRM-style visibility
+### Solution
+This automation:
+- Instantly ingests inbound lead data via webhook
+- Uses an LLM to classify lead **intent**, **urgency**, and **quality**
+- Assigns a structured lead score
+- Automatically routes leads into the appropriate pipeline
+- Logs all results for visibility and review
 
-Clean API response for frontend or system integration
+### Impact
+- Faster lead response times
+- Consistent, repeatable lead qualification
+- Reduced manual effort
+- Scalable automation-ready architecture
 
-🔹 Tech Stack
+---
 
-n8n (Workflow automation)
+## Workflow Architecture
 
-OpenAI Chat Model
+**High-level flow:**
 
-JavaScript Code Nodes
+1. Lead data received via webhook
+2. Input validation and preprocessing
+3. LLM-based lead classification
+4. Logic-based routing and scoring
+5. CRM-style storage and logging
+6. Error handling and fallback paths
 
-Google Sheets API
+---
 
-REST Webhooks
+## AI Classification Logic
 
-🔹 Workflow Overview
+The workflow uses an LLM as a **decision engine**, not a free-form generator.
 
-Incoming lead via webhook
+The model is prompted to return a **strict JSON object** containing:
+- `intent` (e.g., sales, support, inquiry)
+- `urgency` (low / medium / high)
+- `lead_score` (numeric)
+- `confidence` (0–1)
 
-Input validation
+This ensures downstream automation remains deterministic and safe.
 
-LLM-based classification & scoring
+---
 
-Business-rule routing
+## Failure Handling & Reliability
 
-Persistent storage in Google Sheets
+Automation reliability is a core design goal of this project.
 
-JSON response returned to client
+Key safeguards include:
+- Strict JSON schema enforcement on LLM outputs
+- Validation of required fields before routing
+- Confidence-based fallback paths for uncertain classifications
+- Default routes for unknown or malformed inputs
+- Error logging for manual review instead of silent failures
 
+These patterns prevent automation breakage and make the system production-ready.
 
-Sample API Request
+---
 
+## Tech Stack
+
+- **Automation Platform:** n8n
+- **AI / LLM:** OpenAI / OpenRouter
+- **API Integration:** Webhooks, REST APIs
+- **Data Storage:** Google Sheets (CRM-style logging)
+- **Deployment:** Docker
+- **Version Control:** Git & GitHub
+
+---
+
+## Sample Input
+
+```json
 {
   "name": "John Doe",
-  "email": "john@company.com",
-  "message": "We want AI automation for invoice processing",
-  "source": "website"
+  "email": "john@example.com",
+  "message": "I need pricing details urgently",
+  "source": "Website Contact Form"
 }
 
 
+Future Enhancements
 
-Sample API Response
+GoHighLevel (GHL) CRM integration
 
-{
-  "status": "success",
-  "lead": {
-    "name": "John Doe",
-    "email": "john@company.com",
-    "category": "sales",
-    "intent": "high",
-    "urgency": "immediate",
-    "lead_score": 90
-  }
-}
+Slack / Email alerts for high-priority leads
 
+Human-in-the-loop review for low-confidence cases
 
-🔧 Future upgrades: CRM integrations, Slack alerts, human-in-the-loop review, vector memory.
-
-## Security Notes
-- Secrets managed via environment variables
-- `.env` excluded from version control
-- Deterministic LLM outputs to avoid prompt injection risks
+Analytics dashboard for lead performance
